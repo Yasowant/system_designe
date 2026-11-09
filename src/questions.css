@@ -87,6 +87,20 @@
   .q-table td:first-child, .q-table th:first-child { width: 28px; }
 }
 
+.q-res { list-style: none; padding: 0; margin: 0 0 8px; display: grid; gap: 8px; }
+.q-res-link { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--surface); transition: border-color .2s, transform .2s var(--ease); }
+.q-res-link:hover { border-color: var(--accent); transform: translateX(3px); }
+.q-res-link > span:last-child { display: grid; gap: 2px; }
+.q-res-link .tag { min-width: 74px; text-align: center; }
+.q-more { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
+.q-more .q-co { font-size: .74rem; padding: 4px 10px; }
+.q-related-h { margin: 28px 0 12px; }
+.q-related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.q-related-card { display: grid; gap: 6px; align-content: start; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--surface); transition: border-color .2s; }
+.q-related-card:hover { border-color: var(--accent); }
+.q-related-card strong { font-size: .92rem; line-height: 1.35; }
+.q-related-card .q-lvl-xs { margin-left: 0; justify-self: start; }
+
 /* phones: keep the header inside the screen (logo, HLD/LLD switch, search, theme and menu) */
 @media (max-width: 480px) {
   .header-inner { gap: 10px; padding-left: 16px; padding-right: 16px; }

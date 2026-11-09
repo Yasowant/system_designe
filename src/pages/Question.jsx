@@ -5,6 +5,7 @@ import { bySlug } from '../data'
 import { useStore } from '../hooks/useStore'
 import FlowDiagram from '../components/FlowDiagram'
 import NotFound from './NotFound'
+import { questionResources, describeResource } from '../data/questionResources'
 
 const STATUS = [['todo', 'To do'], ['attempted', 'Attempted'], ['solved', 'Solved']]
 
@@ -28,6 +29,14 @@ export default function Question() {
   const chapter = q.chapter && bySlug(q.chapter)
   const isSaved = qSaved.includes(q.slug)
   const hidden = practice && !revealed
+  // Questions that share the most categories with this one.
+  const related = questions
+    .filter((x) => x.slug !== q.slug)
+    .map((x) => ({ x, score: x.cats.filter((c) => q.cats.includes(c)).length + (x.chapter && x.chapter === q.chapter ? 2 : 0) }))
+    .filter((r) => r.score > 0)
+    .sort((a, b) => b.score - a.score || a.x.n - b.x.n)
+    .slice(0, 4)
+    .map((r) => r.x)
 
   return (
     <div className="container chapter-layout q-detail">
@@ -95,8 +104,8 @@ export default function Question() {
         </section>
 
         <section>
-          <h2>1. What to cover</h2>
-          <p className="muted small">Tick each point as you cover it out loud. Ticks are saved in this browser.</p>
+          <h2>1. Details you should know</h2>
+          <p className="muted small">The points an interviewer expects you to address. Tick each one as you cover it out loud; ticks are saved in this browser.</p>
           <ul className="q-checklist">
             {q.discuss.map((d, idx) => (
               <li key={d}>
@@ -150,7 +159,49 @@ export default function Question() {
         )}
 
         <section>
-          <h2>{hidden ? '2' : '5'}. My notes</h2>
+          <h2>{hidden ? '2' : '5'}. Recommended resources</h2>
+          <ul className="q-res">
+            {chapter && (
+              <li>
+                <Link to={`/learn/${chapter.slug}`} className="q-res-link">
+                  <span className="tag">ScaleNotes</span>
+                  <span><strong>Chapter {String(chapter.n).padStart(2, '0')}: {chapter.title}</strong><span className="muted small">Full walkthrough with diagrams and a quiz</span></span>
+                </Link>
+              </li>
+            )}
+            {(questionResources[q.slug] || []).map(describeResource).map((r) => (
+              <li key={r.url}>
+                <a href={r.url} target="_blank" rel="noopener noreferrer" className="q-res-link">
+                  <span className="tag tag-alt">{r.kind}</span>
+                  <span><strong>{r.label} ↗</strong><span className="muted small">{r.source}</span></span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <div className="q-more">
+            <span className="mono tiny muted">search for more</span>
+            {resources(q).map((r) => (
+              <a key={r.label} href={r.url} target="_blank" rel="noopener noreferrer" className="q-co">{r.label} ↗</a>
+            ))}
+          </div>
+          {related.length > 0 && (
+            <>
+              <h3 className="q-related-h">Related questions</h3>
+              <div className="q-related">
+                {related.map((x) => (
+                  <Link key={x.slug} to={`/questions/${x.slug}`} className="q-related-card">
+                    <span className="mono tiny muted">#{x.n}</span>
+                    <strong>{x.title}</strong>
+                    <span className={`q-lvl q-lvl-xs ${levelClass(x.level)}`}>{x.level}</span>
+                  </Link>
+                ))}
+              </div>
+            </>
+          )}
+        </section>
+
+        <section>
+          <h2>{hidden ? '3' : '6'}. My notes</h2>
           <textarea
             className="field q-notes"
             value={qNotes[q.slug] || ''}
@@ -205,4 +256,16 @@ function Timer({ onStart }) {
       {left === 0 && <span className="mono small q-over">time’s up — wrap up and summarise</span>}
     </div>
   )
+}
+
+// Outside material: search links, so they never go stale or point at a dead page.
+function resources(q) {
+  const topic = q.title.replace(/^(Design|Develop|Create|Build)( and Implement)?( an?| the)? /i, '').replace(/:.*$/, '')
+  const enc = (t) => encodeURIComponent(t)
+  return [
+    { kind: 'video', label: 'Video walkthroughs', sub: `YouTube: “${topic} system design”`, url: `https://www.youtube.com/results?search_query=${enc(topic + ' system design interview')}` },
+    { kind: 'blog', label: 'Written solutions', sub: 'Engineering blogs and articles', url: `https://www.google.com/search?q=${enc(topic + ' system design')}` },
+    { kind: 'eng blog', label: 'How real companies built it', sub: 'Engineering blog posts from companies that run it', url: `https://www.google.com/search?q=${enc(topic + ' architecture engineering blog')}` },
+    { kind: 'mock', label: 'Practise out loud', sub: 'Mock interview recordings for this question', url: `https://www.youtube.com/results?search_query=${enc(topic + ' mock system design interview')}` },
+  ]
 }
