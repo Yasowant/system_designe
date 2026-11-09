@@ -25,6 +25,11 @@ export function StoreProvider({ children }) {
   const [quiz, setQuiz] = useState(() => load('yd-quiz', {}))
   const [track, setTrack] = useState(() => load('yd-track', 'hld')) // 'hld' | 'lld'
   const [lldDone, setLldDone] = useState(() => load('yd-lld-done', []))
+  // Interview question bank: status per question, ticked discussion points, personal notes, bookmarks
+  const [qStatus, setQStatus] = useState(() => load('yd-q-status', {})) // { slug: 'attempted' | 'solved' }
+  const [qChecks, setQChecks] = useState(() => load('yd-q-checks', {})) // { slug: [index, …] }
+  const [qNotes, setQNotes] = useState(() => load('yd-q-notes', {})) // { slug: 'text' }
+  const [qSaved, setQSaved] = useState(() => load('yd-q-saved', []))
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
@@ -35,6 +40,10 @@ export function StoreProvider({ children }) {
   useEffect(() => { save('yd-quiz', quiz) }, [quiz])
   useEffect(() => { save('yd-track', track) }, [track])
   useEffect(() => { save('yd-lld-done', lldDone) }, [lldDone])
+  useEffect(() => { save('yd-q-status', qStatus) }, [qStatus])
+  useEffect(() => { save('yd-q-checks', qChecks) }, [qChecks])
+  useEffect(() => { save('yd-q-notes', qNotes) }, [qNotes])
+  useEffect(() => { save('yd-q-saved', qSaved) }, [qSaved])
 
   const toggle = (list, setList) => (slug) =>
     setList(list.includes(slug) ? list.filter((s) => s !== slug) : [...list, slug])
@@ -53,6 +62,26 @@ export function StoreProvider({ children }) {
     lldDone,
     toggleLldDone: toggle(lldDone, setLldDone),
     resetProgress: () => { setDone([]); setQuiz({}) },
+
+    qStatus,
+    setQuestionStatus: (slug, status) =>
+      setQStatus((s) => {
+        const next = { ...s }
+        if (!status) delete next[slug]
+        else next[slug] = status
+        return next
+      }),
+    qChecks,
+    toggleQuestionCheck: (slug, i) =>
+      setQChecks((c) => {
+        const cur = c[slug] || []
+        return { ...c, [slug]: cur.includes(i) ? cur.filter((x) => x !== i) : [...cur, i] }
+      }),
+    qNotes,
+    setQuestionNote: (slug, text) => setQNotes((n) => ({ ...n, [slug]: text })),
+    qSaved,
+    toggleQuestionSaved: toggle(qSaved, setQSaved),
+    resetQuestions: () => { setQStatus({}); setQChecks({}) },
   }
   return <StoreCtx.Provider value={value}>{children}</StoreCtx.Provider>
 }

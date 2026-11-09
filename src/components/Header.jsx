@@ -37,6 +37,7 @@ export default function Header({ onSearch }) {
         </div>
         <nav className={`nav ${open ? 'open' : ''}`}>
           <NavLink to="/" end onClick={close}>Topics</NavLink>
+          {track === 'hld' && <NavLink to="/questions" onClick={close}>Questions</NavLink>}
           {track === 'hld' && <NavLink to="/compare" onClick={close}>Compare</NavLink>}
           <NavLink to="/concepts" onClick={close}>Concepts</NavLink>
           <NavLink to="/cheatsheet" onClick={close}>Cheat Sheet</NavLink>

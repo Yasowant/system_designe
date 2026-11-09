@@ -13,6 +13,8 @@ import Compare from './pages/Compare'
 import CompareDetail from './pages/CompareDetail'
 import ConceptDetail from './pages/ConceptDetail'
 import LldProblem from './pages/LldProblem'
+import Questions from './pages/Questions'
+import Question from './pages/Question'
 
 export default function App() {
   const [searchOpen, setSearchOpen] = useState(false)
@@ -49,6 +51,8 @@ export default function App() {
           <Route path="/concepts" element={<Concepts />} />
           <Route path="/concepts/:slug" element={<ConceptDetail />} />
           <Route path="/lld/:slug" element={<LldProblem />} />
+          <Route path="/questions" element={<Questions />} />
+          <Route path="/questions/:slug" element={<Question />} />
           <Route path="/cheatsheet" element={<CheatSheet />} />
           <Route path="/saved" element={<Saved />} />
           <Route path="*" element={<NotFound />} />

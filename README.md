@@ -15,6 +15,8 @@ npm run build    # production build in /dist
 ## Features
 
 - 28 chapters in 6 tracks (Foundations → Money & Transactions)
+- Interview question bank at /questions: 55 real interview questions with Category, Companies, Complexity and My-status filters (shareable in the URL), search, sorting by # or complexity, pagination (25–500 per page) and a random-question button
+- Each question at /questions/:slug has the prompt, a tickable "what to cover" checklist, an animated request path, a solution outline, trade-offs, a link to the matching deep-dive chapter, a mock-interview timer, practice mode (hide the solution) and personal notes, all saved in localStorage
 - Each chapter has a TL;DR, requirements, an architecture flow diagram, deep-dive sections, a trade-offs table, interview tips and a quiz
 - Light and dark mode, saved in the browser and following the OS setting by default
 - ⌘K / Ctrl+K or `/` search across chapters and concepts
@@ -48,6 +50,7 @@ All content is plain JS data:
 - `src/data/chapters1.js`, `src/data/chapters2.js`: chapters
 - `src/data/concepts.js`: glossary and cheat sheet
 - `src/data/index.js`: track names and read-time calculation
+- `src/data/questions1.js`, `src/data/questions2.js`: interview questions (copy an object, give it a new `n` and `slug`)
 
 To add a chapter, copy any chapter object, give it a new `n` and `slug`, and it shows up everywhere automatically.
 

@@ -1,6 +1,6 @@
 // ScaleNotes service worker: makes the whole site readable offline.
 // Bump VERSION when you change this file to force old caches to be cleared.
-const VERSION = 'scalenotes-v1'
+const VERSION = 'scalenotes-v2'
 const SHELL = ['/', '/index.html', '/manifest.webmanifest', '/favicon.svg', '/icon-192.png', '/icon-512.png']
 
 // Precache the app shell AND the hashed JS/CSS bundles referenced by index.html,

@@ -6,6 +6,7 @@ import { useStore } from '../hooks/useStore'
 import ChapterCard from '../components/ChapterCard'
 import { BRAND } from '../brand'
 import LldHome from './LldHome'
+import { questions } from '../data/questions'
 
 const levels = ['All', 'Beginner', 'Intermediate', 'Advanced']
 
@@ -43,12 +44,13 @@ function HldHome() {
           </h1>
           <p className="hero-sub">
             28 real-world systems — from a URL shortener to a stock exchange — plus {concepts.length} core concepts,
-            a numbers cheat sheet and quick quizzes. Read it on the metro, revise it before the interview.
+            a bank of {questions.length} real interview questions, a numbers cheat sheet and quick quizzes. Read it on the metro, revise it before the interview.
           </p>
           <div className="hero-cta">
             <Link to={`/learn/${next.slug}`} className="btn btn-primary">
               {done.length ? 'Continue' : 'Start learning'} → <span className="mono small">{String(next.n).padStart(2, '0')}</span>
             </Link>
+            <Link to="/questions" className="btn btn-ghost">{questions.length} interview questions</Link>
             <Link to="/cheatsheet" className="btn btn-ghost">Numbers cheat sheet</Link>
           </div>
           <dl className="stats">
